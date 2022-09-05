@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>끝말잇기</title>
+</head>
+<body>
+  <div><span id ="order">1</span>번째 참가자</div>
+  <div>제시어:<span id ="word"></span></div>
+  <input type="text">
+  <button>입력</button>
+  <script>
+
+//자바스크립트를 html 조작할수 있게 하기
+const $order = document.querySelector('#order');
+const $word = document.querySelector('#word');
+const $input = document.querySelector('input');
+const $button = document.querySelector('button');
+
+const number = Number(prompt('몇명이 게임에 참여하나요?'));
+let firstWord;
+let NextWord;
+
+const onClickButton = () =>{
+  if(!firstWord||firstWord[firstWord.length-1] === NextWord[0]){//  첫번째사람
+    firstWord = NextWord;
+    $word.textContent=NextWord;
+    $input.value='';
+    let order = Number($order.textContent)
+
+   /* ==  if (order + 1 > number) {
+        $order.textContent = 1;
+      } else {
+        $order.textContent = order + 1;
+      }*/
+    if(number-order>0){
+      order=order+1;
+      $order.textContent=order;
+    //textcontent는 모두 문자로 받아오기 때문에 Number을 이용해줌
+    //잠시 저장해둘때는 변수를 쓰자
+
+    }else { // 올바르지 않은가
+      $order.textContent=1;
+    }
+  }
+  else{ //단어를 틀리게 말했다
+    alert('단어를 다시 입력해주세요');
+  }
+}
+
+  //검색창에 단어 쓰기
+  //event.target.value는 내가 input창에 어떤걸 썼는지를 보여준다
+  const onInput = (event)=>{
+  NextWord=event.target.value;
+  console.log(event.target.value)
+};
+
+$button.addEventListener('click',onClickButton);
+$input.addEventListener('input',onInput);
+
+</script>
+</body>
+</html>
