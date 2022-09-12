@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<head>
+  <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+  <meta charset="utf-8">
+  <title>로또추첨기</title>
+  <style>
+    .ball {
+      display: inline-block;
+      border: 1px solid black;
+      border-radius: 20px;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      font-size: 20px;
+      text-align: center;
+      margin-right: 20px;
+    }
+  </style>
+</head>
+
+<body>
+<div id="result">추첨 결과는? </div>
+<div id="bonus">보너스: </div>
+<script>
+
+//1~45까지 숫자 배열 만들기
+const candidate = Array(45).fill().map((v,i)=>i+1);
+
+//이번에는 배열안 모든 숫자를 랜덤으로 섞고 앞 7개를 뽑는 방법으로 진행
+//피셔 예이츠 셔플 : 모든숫자를 랜덤으로 섞는다
+//그 전 강의는 9개중 4개의 숫자만을 랜덤으로 섞음
+
+//while은 조건이 간단하거나 내가 몇번 반복해야할지 감이 안올때 편하고
+//for은 조건이 복잡하거나 코드에 i++같은게 들어갈때 쓰면 편하다
+
+
+const shuffle = [];
+
+while(candidate.length>0){ ///for(i=candidate.length,i>0,i--)으로 대체 가능
+  const random = Math.floor(Math.random()*candidate.length); //무작위 인덱스 뽑기
+  const spliceArray = candidate.splice(random,1); //뽑은값은 배열에 들어있음 ex) 3을 뽑았다면 spliceArray = [3]
+  const value = spliceArray[0]; //배열에 들어 있는 값을 꺼내어
+  shuffle.push(value); //shuffle 배열에 넣기
+}
+
+console.log(shuffle);
+const winBalls = shuffle.slice(0,6).sort((a,b)=>a-b); //로또 공 6개 뽑기
+const bonus = shuffle[6]; //보너스공 뽑기
+console.log(winBalls,bonus);
+
+const $result = document.querySelector('#result');
+
+//코드를 복붙하게 될때는 될때는 함수를 이용하자
+const drawBall= (number,$parent) =>{
+  const $ball = document.createElement('div') //<div> </div> 생성 $은 html코드
+  $ball.className = 'ball' //div의 class이름은 ball (*className이라고 표기해야함)
+  $ball.textContent=number;
+  $parent.appendChild($ball);
+  //함수는 return undefinded를 출력한다
+
+};
+
+for(let i =0;i<winBalls.length;i++){ // 반복문 돌릴때는 몇번 반복할지를 생각
+  setTimeout(() => {
+  drawBall(winBalls[i],$result) //함수자리 즉 drawball()함수를 통째로 넣은것
+},(i+1)*1000);                  //따라서 return값이 undefided가 아니다
+}
+
+const $bonus = document.querySelector('#bonus')
+setTimeout(()=>{
+  drawBall(bonus,$bonus)
+},7000);
+
+
+</script>
+</body>
