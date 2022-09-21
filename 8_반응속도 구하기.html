@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>반응속도</title>
+<style>
+  #screen {
+    width: 300px;
+    height: 200px;
+    text-align: center;
+    user-select: none;
+  }
+  #screen.waiting {
+    background-color: aqua;
+  }
+  #screen.ready {
+    background-color: red;
+    color: white;
+  }
+  #screen.now {
+    background-color: greenyellow;
+  }
+</style>
+</head>
+
+<body>
+<div id="screen" class="waiting">클릭해서 시작하세요</div>
+<div id="result"></div>
+<script>
+  const $screen = document.querySelector('#screen');
+  const $result = document.querySelector('#result');
+
+  let clickStartTime;
+  let clickEndTime;
+  let difference;
+  let average;
+
+
+  const recode = [];
+
+const greenScreen = () =>{
+    clickStartTime = new Date();
+    $screen.classList.remove('ready');
+    $screen.classList.add('now');
+    $screen.textContent='화면을 클릭하세요';
+}
+
+
+const onScreenClick = ()=>{
+  if($screen.classList.contains('waiting')){ //파랑화면 클릭
+    $screen.classList.remove('waiting');
+    $screen.classList.add('ready');
+
+   onClickGreen = setTimeout(greenScreen,(Math.random()*1000)+2000);
+
+  } else if($screen.classList.contains('ready')){ // 빨강화면 클릭
+    alert('대기동안 클릭하지 마세요');
+    $screen.classList.remove('ready');
+    $screen.classList.add('waiting');
+    clearTimeout(onClickGreen);
+
+  } else if($screen.classList.contains('now')){ //초록화면 클릭
+    clickEndTime = new Date();
+    difference=(clickEndTime-clickStartTime)/1000;
+    recode.push(difference);
+    average = recode.reduce((a,c)=>a+c)/recode.length;
+
+    $result.textContent = `${clickEndTime-clickStartTime}ms,평균:${average}`;
+    $result.append(document.createElement('br'),`가장 빠른 시도: ${recode.slice(0,5).sort((a,b)=>a-b)}`);
+
+   /* 속도 top5 정할때 이 코드로 대체 가능
+   const topFive = recode.sort((p,c)=>p-c).slice(0,5);
+
+   topFive.forEach((el,index) => {
+    $result.append(document.createElement('br'),`${index+1}위는 ${el}`);
+
+   });*/
+
+
+    $screen.classList.remove('now');
+    $screen.classList.add('waiting');
+
+      }
+    };
+
+
+
+$screen.addEventListener('click',onScreenClick);
+
+</script>
+</body>
+</html>
